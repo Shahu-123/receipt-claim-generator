@@ -1,0 +1,51 @@
+GENERAL CLAIM FORM
+
+To: [Approving Officer]
+Rank and Name of Approving Officer
+
+May I have your approval for the following purchase(s):
+
+| S/N | Item Description | Purpose | Estimate Cost (includes GST) | Is GST included in this amount? |
+|-----|------------------|---------|------------------------------|----------------------------------|
+{#receipts}
+| {sn} | {itemDescription} | {#showPurpose}{purpose}{/showPurpose} | {total} | {gst} |
+{/receipts}
+
+---
+UPDATED FEATURES:
+1. {#showPurpose}{purpose}{/showPurpose} - Purpose shown only in first row for merge effect
+2. {#receipts}...{/receipts} - Loop structure for dynamic rows
+3. {itemDescription} - Enhanced descriptions like "Refreshments from PRIME Supermarket"
+4. {total} - Amounts with currency formatting
+5. {gst} - Always set to "Yes"
+6. {sn} - Serial number for each row
+
+Your actual Word template should use this loop structure with conditional purpose display.
+
+## Available Placeholders
+
+### Basic Information
+- {date} - Current date (DD/MM/YYYY)
+- {employee_name} - Employee name
+- {Purpose} - User-entered purpose
+- {categoryCode} - Expense category code
+
+### Claimant Information (All Uppercase)
+- {claimantName} - Claimant's full name (UPPERCASE)
+- {claimantNRIC} - Claimant's NRIC (UPPERCASE)
+- {claimantDesignation} - Claimant's designation (UPPERCASE)
+- {claimantDept} - Claimant's department (UPPERCASE)
+- {claimantUnit} - Claimant's unit (UPPERCASE)
+- {claimantPHNumber} - Claimant's phone number (UPPERCASE)
+- {claimantEmail} - Claimant's email (UPPERCASE)
+- {%claimantSignature} - Claimant's signature image
+
+### Approving Officer Information
+- {approvingOfficerName} - Approving officer's name
+- {approvingOfficerRank} - Approving officer's rank
+- {approvingOfficerDesignation} - Approving officer's designation
+- {approvingOfficerFull} - Full title (e.g., "LTC Joe Ong")
+
+### Uppercase Approving Officer Fields
+- {APPROVINGOFFICERDESIGNATION} - Designation (UPPERCASE)
+- {APPROVINGOFFICERFULL} - Full title (UPPERCASE)

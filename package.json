@@ -1,0 +1,37 @@
+{
+  "name": "claimgenerator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.872.0",
+    "@aws-sdk/client-ses": "^3.872.0",
+    "@aws-sdk/client-sesv2": "^3.872.0",
+    "@aws-sdk/client-textract": "^3.872.0",
+    "aws-sdk": "^2.1692.0",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "docx": "^9.5.1",
+    "docx-templates": "^4.14.1",
+    "docxtemplater": "^3.65.3",
+    "docxtemplater-image-module-free": "^1.1.1",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "image-size": "^2.0.2",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.5",
+    "openai": "^5.13.1",
+    "pizzip": "^3.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

@@ -1,0 +1,768 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Claim Generator</title>
+		<style>
+			:root {
+				--bg-color: #f8fafc;
+				--card-bg: #ffffff;
+				--card-border: #e2e8f0;
+				--text-primary: #1e293b;
+				--text-secondary: #64748b;
+				--text-muted: #94a3b8;
+				--accent-primary: #2563eb;
+				--accent-hover: #1d4ed8;
+				--success: #059669;
+				--danger: #dc2626;
+				--input-border: #cbd5e1;
+				--input-focus: #3b82f6;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body { 
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+				margin: 0;
+				padding: 0;
+				background: var(--bg-color);
+				color: var(--text-primary);
+				line-height: 1.6;
+				font-size: 14px;
+			}
+
+			.container {
+				max-width: 800px;
+				margin: 0 auto;
+				padding: 40px 24px;
+			}
+
+			.header {
+				text-align: center;
+				margin-bottom: 48px;
+			}
+
+			h1 {
+				font-size: 32px;
+				font-weight: 700;
+				color: var(--text-primary);
+				margin: 0 0 12px 0;
+				letter-spacing: -0.025em;
+			}
+
+			.subtitle {
+				color: var(--text-secondary);
+				font-size: 16px;
+				margin: 0;
+				font-weight: 400;
+			}
+
+			.card {
+				background: var(--card-bg);
+				border: 1px solid var(--card-border);
+				border-radius: 12px;
+				box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+				overflow: hidden;
+			}
+
+			.form-section {
+				padding: 32px;
+			}
+
+			.form-row {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 24px;
+				margin-bottom: 24px;
+			}
+
+			.form-row.full {
+				grid-column: 1 / -1;
+			}
+
+			.form-group {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+			}
+
+			.form-group.full {
+				grid-column: 1 / -1;
+			}
+
+			label {
+				font-weight: 600;
+				color: var(--text-primary);
+				font-size: 14px;
+				margin: 0;
+			}
+
+			input[type="text"], 
+			input[type="email"], 
+			input[type="file"], 
+			select {
+				padding: 12px 16px;
+				border: 1px solid var(--input-border);
+				border-radius: 8px;
+				background: var(--card-bg);
+				color: var(--text-primary);
+				font-size: 14px;
+				transition: all 0.2s ease;
+				width: 100%;
+			}
+
+			input::placeholder {
+				color: var(--text-muted);
+			}
+
+			select {
+				appearance: none;
+				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+				background-position: right 12px center;
+				background-repeat: no-repeat;
+				background-size: 16px;
+				padding-right: 40px;
+			}
+
+			input:focus, 
+			select:focus {
+				outline: none;
+				border-color: var(--input-focus);
+				box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+			}
+
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				padding: 12px 20px;
+				border: none;
+				border-radius: 8px;
+				font-size: 14px;
+				font-weight: 600;
+				text-decoration: none;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				white-space: nowrap;
+			}
+
+			.btn-primary {
+				background: var(--accent-primary);
+				color: white;
+			}
+
+			.btn-primary:hover {
+				background: var(--accent-hover);
+			}
+
+			.btn-secondary {
+				background: #f1f5f9;
+				color: var(--text-primary);
+				border: 1px solid var(--input-border);
+			}
+
+			.btn-secondary:hover {
+				background: #e2e8f0;
+			}
+
+			.btn:disabled {
+				opacity: 0.6;
+				cursor: not-allowed;
+			}
+
+			.submit-section {
+				padding: 24px 32px;
+				background: #f8fafc;
+				border-top: 1px solid var(--card-border);
+				text-align: center;
+			}
+
+			.submit-btn {
+				width: 100%;
+				max-width: 300px;
+				padding: 16px 32px;
+				font-size: 16px;
+			}
+
+			.stepper-section {
+				padding: 32px;
+				background: #f8fafc;
+				border-top: 1px solid var(--card-border);
+			}
+
+			.stepper {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 32px;
+				margin-bottom: 24px;
+			}
+
+			.step {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 12px;
+				color: var(--text-muted);
+				font-size: 14px;
+				font-weight: 500;
+			}
+
+			.step .dot {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				border: 2px solid var(--input-border);
+				background: var(--card-bg);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: all 0.3s ease;
+			}
+
+			.step .dot .inner {
+				width: 16px;
+				height: 16px;
+				border-radius: 50%;
+				background: var(--text-muted);
+				transition: all 0.3s ease;
+			}
+
+			.step.active {
+				color: var(--accent-primary);
+			}
+
+			.step.active .dot {
+				border-color: var(--accent-primary);
+				background: rgba(37, 99, 235, 0.1);
+			}
+
+			.step.active .inner {
+				background: var(--accent-primary);
+			}
+
+			.step.done {
+				color: var(--success);
+			}
+
+			.step.done .dot {
+				border-color: var(--success);
+				background: rgba(5, 150, 105, 0.1);
+			}
+
+			.step.done .inner {
+				background: var(--success);
+			}
+
+			.connector {
+				width: 60px;
+				height: 2px;
+				background: var(--input-border);
+				transition: all 0.3s ease;
+			}
+
+			.connector.active {
+				background: var(--accent-primary);
+			}
+
+			.connector.done {
+				background: var(--success);
+			}
+
+			.progress {
+				background: var(--card-bg);
+				border: 1px solid var(--card-border);
+				border-radius: 8px;
+				padding: 20px;
+				margin-top: 24px;
+			}
+
+			.progress-header {
+				font-size: 16px;
+				font-weight: 600;
+				color: var(--text-primary);
+				margin-bottom: 16px;
+			}
+
+			.progress-item {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				margin-bottom: 12px;
+				font-size: 14px;
+			}
+
+			.progress-item:last-child {
+				margin-bottom: 0;
+			}
+
+			.progress-item .status {
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 12px;
+			}
+
+			.progress-item .status.success {
+				background: var(--success);
+				color: white;
+			}
+
+			.progress-item .status.pending {
+				background: var(--text-muted);
+				color: white;
+			}
+
+			.progress-item .status.error {
+				background: var(--danger);
+				color: white;
+			}
+
+			@media (max-width: 768px) {
+				.container {
+					padding: 24px 16px;
+				}
+
+				.form-row {
+					grid-template-columns: 1fr;
+					gap: 20px;
+				}
+
+				.stepper {
+					gap: 20px;
+				}
+
+				.connector {
+					width: 40px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="header">
+				<h1>General Claim Form Generator</h1>
+				<div class="subtitle">Generate professional GCFs from your receipts with AI assistance</div>
+			</div>
+
+			<div class="card">
+				<div class="form-section">
+					<form id="uploadForm">
+						<div class="form-row">
+							<div class="form-group">
+								<label for="claimantSelect">Claimant</label>
+								<select name="claimantId" id="claimantSelect"></select>
+								<button type="button" id="addClaimantBtn" class="btn btn-secondary">Add Claimant</button>
+							</div>
+							<div class="form-group">
+								<label for="approvingOfficerSelect">Approving Officer</label>
+								<select name="approvingOfficerId" id="approvingOfficerSelect"></select>
+								<button type="button" id="addApprovingOfficerBtn" class="btn btn-secondary">Add Officer</button>
+							</div>
+						</div>
+
+						<div class="form-row full">
+							<div class="form-group">
+								<label for="purpose">Purpose</label>
+								<input type="text" name="purpose" id="purpose" placeholder="Example: Team cohesion event" required />
+							</div>
+						</div>
+
+						<div class="form-row full">
+							<div class="form-group">
+								<label for="receipts">Receipt Images</label>
+								<input type="file" name="receipts" id="receipts" accept="image/*,application/pdf" multiple required />
+							</div>
+						</div>
+
+						<div class="form-row full">
+							<div class="form-group">
+								<label for="expenseTypeSelect">Type of Expenses</label>
+								<select name="expenseType" id="expenseTypeSelect" required>
+									<option value="">Select Type of Expenses</option>
+									<option value="Campaigns & Exhibitions">Campaigns & Exhibitions</option>
+									<option value="Ceremonies & Celebrations">Ceremonies & Celebrations</option>
+									<option value="Misc Reimb'">Misc Reimb'</option>
+									<option value="Office Supplies">Office Supplies</option>
+									<option value="Organisational Excellence Award">Organisational Excellence Award</option>
+									<option value="Other Supplies">Other Supplies</option>
+									<option value="Staff Rec & Welfare">Staff Rec & Welfare</option>
+									<option value="Others">Others (Please specify)</option>
+								</select>
+							</div>
+						</div>
+
+						<div id="othersCategoryDiv" class="form-row full" style="display: none;">
+							<div class="form-group">
+								<label for="othersCategoryInput">Please specify category</label>
+								<input type="text" name="othersCategory" id="othersCategoryInput" placeholder="Enter the specific category" />
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="submit-section">
+					<button type="submit" form="uploadForm" id="submitBtn" class="btn btn-primary submit-btn">
+						Submit & Generate Document
+					</button>
+				</div>
+
+				<div class="stepper-section">
+					<div class="stepper" id="stepper">
+						<div class="step" data-step="1">
+							<div class="dot">
+								<div class="inner"></div>
+							</div>
+							<div>Upload & Process</div>
+						</div>
+						<div class="connector" data-join="1-2"></div>
+						<div class="step" data-step="2">
+							<div class="dot">
+								<div class="inner"></div>
+							</div>
+							<div>Generate</div>
+						</div>
+						<div class="connector" data-join="2-3"></div>
+						<div class="step" data-step="3">
+							<div class="dot">
+								<div class="inner"></div>
+							</div>
+							<div>Download</div>
+						</div>
+					</div>
+
+					<div id="progress" class="progress" style="display: none;"></div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+		let processedData = null;
+		let purpose = '';
+		let expenseType = '';
+		let othersCategory = '';
+		let claimantId = '';
+		let approvingOfficerId = '';
+
+		const form = document.getElementById('uploadForm');
+		const progress = document.getElementById('progress');
+		const card = document.querySelector('.card');
+		const stepper = document.getElementById('stepper');
+		const submitBtn = document.getElementById('submitBtn');
+		const claimantSelect = document.getElementById('claimantSelect');
+		const addClaimantBtn = document.getElementById('addClaimantBtn');
+		const approvingOfficerSelect = document.getElementById('approvingOfficerSelect');
+		const addApprovingOfficerBtn = document.getElementById('addApprovingOfficerBtn');
+		const expenseTypeSelect = document.getElementById('expenseTypeSelect');
+		const othersCategoryDiv = document.getElementById('othersCategoryDiv');
+		const othersCategoryInput = document.getElementById('othersCategoryInput');
+
+		function lockForm(locked) {
+			const controls = form.querySelectorAll('input, select, button');
+			controls.forEach(el => { 
+				if (el !== progress) el.disabled = locked; 
+			});
+			if (locked) {
+				card.classList.add('processing');
+			} else {
+				card.classList.remove('processing');
+			}
+		}
+
+		function setStepper(state) {
+			const steps = stepper.querySelectorAll('.step');
+			const connectors = stepper.querySelectorAll('.connector');
+			
+			steps.forEach(step => {
+				const idx = Number(step.getAttribute('data-step'));
+				step.classList.remove('active', 'done');
+				if (idx <= state) {
+					if (idx < state) {
+						step.classList.add('done');
+					} else if (idx === state) {
+						step.classList.add('active');
+					}
+				}
+			});
+			
+			connectors.forEach(conn => {
+				const join = conn.getAttribute('data-join');
+				conn.classList.remove('active', 'done');
+				const [a, b] = join.split('-').map(Number);
+				if (b <= state) {
+					conn.classList.add('done');
+				} else if (a < state && state <= b) {
+					conn.classList.add('active');
+				}
+			});
+		}
+
+		function showProgress() {
+			progress.style.display = 'block';
+		}
+
+		function updateProgress(content) {
+			progress.innerHTML = content;
+		}
+
+		async function loadClaimants() {
+			const res = await fetch('/claimants');
+			const data = await res.json();
+			const list = data.claimants || [];
+			claimantSelect.innerHTML = list.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+			if (list.length) claimantId = list[0].id;
+		}
+
+		async function loadApprovingOfficers() {
+			const res = await fetch('/approving-officers');
+			const data = await res.json();
+			const list = data.approvingOfficers || [];
+			approvingOfficerSelect.innerHTML = list.map(o => `<option value="${o.id}">${o.rank} ${o.name}</option>`).join('');
+			if (list.length) approvingOfficerId = list[0].id;
+		}
+
+		loadClaimants();
+		loadApprovingOfficers();
+		
+		claimantSelect.addEventListener('change', () => { claimantId = claimantSelect.value; });
+		approvingOfficerSelect.addEventListener('change', () => { approvingOfficerId = approvingOfficerSelect.value; });
+		
+		expenseTypeSelect.addEventListener('change', () => {
+			if (expenseTypeSelect.value === 'Others') {
+				othersCategoryDiv.style.display = 'block';
+				othersCategoryInput.required = true;
+			} else {
+				othersCategoryDiv.style.display = 'none';
+				othersCategoryInput.required = false;
+			}
+		});
+
+		addClaimantBtn.addEventListener('click', async () => {
+			const name = prompt('Full Name'); if (!name) return;
+			const nric = prompt('NRIC'); if (!nric) return;
+			const designation = prompt('Designation (Example: Team Lead)') || '';
+			const dept = prompt('Department (Example: Operations)') || '';
+			const unit = prompt('Unit (Example: Unit name)') || '';
+			const phNumber = prompt('Phone Number (Example: 8000 0000)') || '';
+			const email = prompt('Email (Example: jane_tan@example.gov.sg)') || '';
+			const sig = confirm('Upload a signature image now? OK=yes');
+			
+			if (sig) {
+				const input = document.createElement('input');
+				input.type = 'file';
+				input.accept = 'image/*';
+				input.onchange = async () => {
+					const file = input.files[0];
+					await submitClaimant(name, nric, designation, dept, unit, phNumber, email, file);
+				};
+				input.click();
+			} else {
+				await submitClaimant(name, nric, designation, dept, unit, phNumber, email, null);
+			}
+		});
+
+		async function submitClaimant(name, nric, designation, dept, unit, phNumber, email, file) {
+			const fd = new FormData();
+			fd.set('name', name);
+			fd.set('nric', nric);
+			fd.set('designation', designation);
+			fd.set('dept', dept);
+			fd.set('unit', unit);
+			fd.set('phNumber', phNumber);
+			fd.set('email', email);
+			if (file) fd.set('signature', file);
+			
+			const response = await fetch('/claimants', { method: 'POST', body: fd });
+			if (response.ok) {
+				await loadClaimants();
+				alert('Claimant added successfully!');
+			} else {
+				alert('Failed to add claimant. Please try again.');
+			}
+		}
+
+		addApprovingOfficerBtn.addEventListener('click', async () => {
+			const rank = prompt('Rank (Example: LTC, MAJ, CPT)'); if (!rank) return;
+			const name = prompt('Full Name'); if (!name) return;
+			const designation = prompt('Designation (Example: Head of Department)') || '';
+			
+			const fd = new FormData();
+			fd.set('rank', rank);
+			fd.set('name', name);
+			fd.set('designation', designation);
+			
+			const response = await fetch('/approving-officers', { method: 'POST', body: fd });
+			if (response.ok) {
+				await loadApprovingOfficers();
+				alert('Approving officer added successfully!');
+			} else {
+				alert('Failed to add approving officer. Please try again.');
+			}
+		});
+		
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			
+			const formData = new FormData(form);
+			purpose = formData.get('purpose');
+			expenseType = formData.get('expenseType');
+			othersCategory = formData.get('othersCategory');
+			claimantId = claimantSelect.value;
+			approvingOfficerId = approvingOfficerSelect.value;
+			
+			lockForm(true);
+			setStepper(1);
+			showProgress();
+			
+			updateProgress(`
+				<div class="progress-header">🚀 Starting Process</div>
+				<div class="progress-item">
+					<div class="status success">✓</div>
+					<div>Form data collected</div>
+				</div>
+				<div class="progress-item">
+					<div class="status pending">⏳</div>
+					<div>Initializing...</div>
+				</div>
+			`);
+			
+			await processReceiptsAndGenerateDocument(formData);
+		});
+
+		async function processReceiptsAndGenerateDocument(formData) {
+			try {
+				updateProgress(`
+					<div class="progress-header">🔄 Processing Receipts</div>
+					<div class="progress-item">
+						<div class="status success">✓</div>
+						<div>Form data collected</div>
+					</div>
+					<div class="progress-item">
+						<div class="status pending">⏳</div>
+						<div>Uploading and analyzing receipts...</div>
+					</div>
+				`);
+				
+				const res = await fetch('/upload', { method: 'POST', body: formData });
+				const data = await res.json();
+				
+				if (!data.ok) {
+					throw new Error(data.error || 'Failed to process receipts');
+				}
+				
+				processedData = data;
+				setStepper(2);
+				
+				updateProgress(`
+					<div class="progress-header">📄 Generating Document</div>
+					<div class="progress-item">
+						<div class="status success">✓</div>
+						<div>Form data collected</div>
+					</div>
+					<div class="progress-item">
+						<div class="status success">✓</div>
+						<div>Receipts processed (${data.fileCount || 0} files)</div>
+					</div>
+					<div class="progress-item">
+						<div class="status pending">⏳</div>
+						<div>Generating Word document...</div>
+					</div>
+				`);
+				
+				const response = await fetch('/generate-document', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						documents: data.documents,
+						purpose: purpose,
+						expenseType: expenseType,
+						othersCategory: othersCategory,
+						claimantId: claimantId,
+						approvingOfficerId: approvingOfficerId
+					})
+				});
+
+				if (!response.ok) {
+					throw new Error('Document generation failed');
+				}
+
+				setStepper(3);
+				
+				updateProgress(`
+					<div class="progress-header">⬇️ Downloading Document</div>
+					<div class="progress-item">
+						<div class="status success">✓</div>
+						<div>Form data collected</div>
+					</div>
+					<div class="progress-item">
+						<div class="status success">✓</div>
+						<div>Receipts processed (${data.fileCount || 0} files)</div>
+					</div>
+					<div class="progress-item">
+						<div class="status success">✓</div>
+						<div>Word document generated</div>
+					</div>
+					<div class="progress-item">
+						<div class="status pending">⏳</div>
+						<div>Preparing download...</div>
+					</div>
+				`);
+
+				const blob = await response.blob();
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = `claim-${Date.now()}.docx`;
+				document.body.appendChild(a);
+				a.click();
+				window.URL.revokeObjectURL(url);
+				document.body.removeChild(a);
+
+				updateProgress(`
+					<div class="progress-header">🎉 Process Complete</div>
+					<div class="progress-item">
+						<div class="status success">✓</div>
+						<div>Form data collected</div>
+					</div>
+					<div class="progress-item">
+						<div class="status success">✓</div>
+						<div>Receipts processed (${data.fileCount || 0} files)</div>
+					</div>
+					<div class="progress-item">
+						<div class="status success">✓</div>
+						<div>Word document generated</div>
+					</div>
+					<div class="progress-item">
+						<div class="status success">✓</div>
+						<div>Document downloaded successfully</div>
+					</div>
+				`);
+				
+				setStepper(4);
+				lockForm(false);
+				
+			} catch (error) {
+				console.error('Error in automated process:', error);
+				updateProgress(`
+					<div class="progress-header">❌ Process Failed</div>
+					<div class="progress-item">
+						<div class="status error">✗</div>
+						<div>Error: ${error.message}</div>
+					</div>
+					<div class="progress-item">
+						<div class="status error">✗</div>
+						<div>Please try again or contact support if the issue persists.</div>
+					</div>
+				`);
+				lockForm(false);
+			}
+		}
+		</script>
+	</body>
+</html>

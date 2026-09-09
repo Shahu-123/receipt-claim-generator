@@ -1,0 +1,13 @@
+[
+  {
+    "id": "1",
+    "name": "Jane Tan",
+    "nric": "S0000000A",
+    "designation": "Section Commander",
+    "dept": "Operations",
+    "unit": "Example Fire Station",
+    "phNumber": "80000000",
+    "email": "jane_tan@example.gov.sg",
+    "signaturePath": "signatures/jane_tan.png"
+  }
+]
